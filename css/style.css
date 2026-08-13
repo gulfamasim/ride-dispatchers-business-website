@@ -974,14 +974,17 @@ body.is-leaving { opacity: 0; transition: opacity .35s ease; }
 .footer-contact { display: flex; flex-direction: column; gap: 10px; }
 .footer-contact a {
   display: flex;
-  align-items: center;
+  /* flex-start + a small icon offset keeps the icon aligned to the first line
+     of the multi-line address while still reading as centred on one-liners */
+  align-items: flex-start;
   gap: 10px;
   font-size: 0.9rem;
+  line-height: 1.55;
   color: var(--t-light-muted);
   transition: color .2s;
 }
 .footer-contact a:hover { color: var(--rd-primary-light); }
-.footer-contact svg { width: 16px; height: 16px; flex: none; }
+.footer-contact svg { width: 16px; height: 16px; flex: none; margin-top: 5px; }
 
 .footer h4 {
   color: #fff;
@@ -1358,13 +1361,20 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
 /* ============================================================
    PARTNER LOGOS — featured (Cabica)
    ============================================================ */
+/* The badge is absolutely positioned so it does not push the logo off the
+   baseline shared with the other, badge-less partner logos. */
 .partner-item {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 }
 .partner-item .partner-flag {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.10em;
@@ -1373,6 +1383,11 @@ select:focus-visible, textarea:focus-visible, summary:focus-visible {
   background: var(--rd-accent);
   padding: 3px 9px;
   border-radius: 999px;
+}
+/* Inside the Cabica callout the badge sits inline, not pinned under a logo */
+.callout .cabica-row .partner-flag {
+  position: static;
+  transform: none;
 }
 .partner-item.is-featured .partner-logo { opacity: 1; }
 
