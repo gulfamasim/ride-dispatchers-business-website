@@ -1,12 +1,10 @@
-/* Ride Dispatchers — main.js (v2) */
+/* Ride Dispatchers — main.js (v3) */
 
 /* ===== Page loader ===== */
 (function pageLoader() {
-  // Hide loader once everything is ready
   const hide = () => {
     const loader = document.querySelector('.page-loader');
     if (!loader) return;
-    // Small delay so the loader is actually perceptible on fast loads
     setTimeout(() => loader.classList.add('hidden'), 350);
   };
   if (document.readyState === 'complete') {
@@ -15,28 +13,28 @@
     window.addEventListener('load', hide);
   }
 
-  // When user clicks an internal link, fade page out + show loader briefly
+  // Fade out + show loader when navigating to another page on this site
   document.addEventListener('click', (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     const a = e.target.closest('a');
     if (!a) return;
     const href = a.getAttribute('href');
-    if (!href) return;
-    // Only intercept same-origin .html links (not anchors, mailto, tel, external)
-    if (
-      href.startsWith('#') ||
-      href.startsWith('mailto:') ||
-      href.startsWith('tel:') ||
-      href.startsWith('http://') ||
-      href.startsWith('https://') ||
-      a.target === '_blank'
-    ) return;
-    if (!href.endsWith('.html') && href !== '/' && !href.includes('.html')) return;
+    if (!href || a.target === '_blank' || a.hasAttribute('download')) return;
+    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+    // Resolve and keep only same-origin HTML page navigations
+    let url;
+    try { url = new URL(href, window.location.href); } catch (_) { return; }
+    if (url.origin !== window.location.origin) return;
+    if (url.pathname === window.location.pathname && url.hash) return;
+    // Skip direct asset links (sitemap.xml, robots.txt, images, …)
+    if (/\.(xml|txt|png|jpe?g|webp|svg|ico|pdf|css|js)$/i.test(url.pathname)) return;
 
     e.preventDefault();
     document.body.classList.add('is-leaving');
     const loader = document.querySelector('.page-loader');
     if (loader) loader.classList.remove('hidden');
-    setTimeout(() => { window.location.href = href; }, 280);
+    setTimeout(() => { window.location.href = url.href; }, 280);
   });
 })();
 
@@ -55,7 +53,11 @@
   window.addEventListener('scroll', onScroll, { passive: true });
 
   if (toggle) {
-    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    });
   }
 })();
 
@@ -87,8 +89,7 @@
       const t = Math.min(1, (now - start) / dur);
       const eased = 1 - Math.pow(1 - t, 3);
       const v = target * eased;
-      const display = Number.isInteger(target) ? Math.round(v) : v.toFixed(1);
-      el.textContent = display;
+      el.textContent = Number.isInteger(target) ? Math.round(v) : v.toFixed(1);
       if (suffix) {
         const span = document.createElement('span');
         span.className = 'suffix';
@@ -124,14 +125,73 @@
   });
 })();
 
-/* ===== Dynamic year in footer ===== */
-(function year() {
-  const y = document.querySelector('[data-year]');
-  if (y) y.textContent = new Date().getFullYear();
+/* ===== FAQ accordion ===== */
+(function faq() {
+  document.querySelectorAll('.faq-q').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const open = item.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
 })();
 
-/* ===== Demo form submit handler ===== */
-(function forms() {
+/* ===== Dynamic year in footer ===== */
+(function year() {
+  document.querySelectorAll('[data-year]').forEach((y) => {
+    y.textContent = new Date().getFullYear();
+  });
+})();
+
+/* ===== Success modal ===== */
+const RDModal = (function modal() {
+  const el = document.getElementById('success-modal');
+  if (!el) return { open() {}, close() {} };
+  const close = () => { el.hidden = true; document.body.style.overflow = ''; };
+  const open = () => { el.hidden = false; document.body.style.overflow = 'hidden'; };
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.hasAttribute('data-close-modal')) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !el.hidden) close();
+  });
+  return { open, close };
+})();
+
+/* ===== AJAX form submit (Formspree) ===== */
+(function ajaxForms() {
+  document.querySelectorAll('form[data-ajax]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('[type="submit"]');
+      const original = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.innerHTML = 'Sending…'; }
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' }
+      })
+        .then((res) => {
+          if (res.ok) {
+            form.reset();
+            RDModal.open();
+          } else {
+            alert('Something went wrong. Please try again, or email us at info@ridedispatchers.com.');
+          }
+        })
+        .catch(() => {
+          alert('Network error. Please check your connection and try again.');
+        })
+        .finally(() => {
+          if (btn) { btn.disabled = false; btn.innerHTML = original; }
+        });
+    });
+  });
+})();
+
+/* ===== Demo form submit (newsletter) ===== */
+(function demoForms() {
   document.querySelectorAll('form[data-demo]').forEach((form) => {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -141,10 +201,30 @@
       btn.disabled = true;
       btn.innerHTML = 'Sending…';
       setTimeout(() => {
-        btn.innerHTML = '✓ Sent — we\'ll be in touch';
+        btn.innerHTML = '✓ Subscribed';
         form.reset();
         setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2800);
       }, 900);
+    });
+  });
+})();
+
+/* ===== Copy-to-clipboard buttons ===== */
+(function copyBtns() {
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = btn.getAttribute('data-copy');
+      const done = () => {
+        const label = btn.querySelector('.copy-label');
+        if (!label) return;
+        const original = label.textContent;
+        label.textContent = 'Copied!';
+        setTimeout(() => { label.textContent = original; }, 1600);
+      };
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(done).catch(() => {});
+      }
     });
   });
 })();

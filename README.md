@@ -1,16 +1,22 @@
 # Ride Dispatchers — Website Documentation
 
-**Live site:** [ridedispatchers.com](https://ridedispatchers.com)  
-**Hosted on:** Cloudflare Pages  
-**Last updated:** May 2026
+**Live site:** [www.ridedispatchers.com](https://www.ridedispatchers.com)
+**Hosted on:** Vercel (migrated from Cloudflare Pages, August 2026)
+**Canonical host:** `www.ridedispatchers.com` — apex redirects to www
+**Last updated:** 14 August 2026
+
+> Working on SEO? Read **[SEO-PROGRESS.md](SEO-PROGRESS.md)** first — it is the living tracker
+> of what is done, what is next, and which actions are yours vs the code's.
 
 ---
 
 ## Project Overview
 
-Static website for **Ride Dispatchers** — a taxi fleet outsourcing firm offering dispatch, contact center, virtual assistance, digital marketing, and web services to UK-based taxi operators.
+Static website for **Ride Dispatchers** — a 24/7 outsourced taxi dispatch call center and BPO
+based in Lahore, Pakistan, serving taxi and private-hire fleets in the UK, Ireland and North America.
 
-Built from scratch as a custom 2026 redesign. No frameworks, no Bootstrap — pure HTML, CSS, and vanilla JavaScript.
+No frameworks, no build step — plain HTML, CSS and vanilla JavaScript. Deployed straight from
+this repo by Vercel on every push to `main`.
 
 ---
 
@@ -18,49 +24,103 @@ Built from scratch as a custom 2026 redesign. No frameworks, no Bootstrap — pu
 
 ```
 /
-├── index.html          → Homepage
-├── about.html          → About page
-├── services.html       → Services page
-├── contact.html        → Contact page
+├── index.html                              → Homepage
+├── about.html                              → About
+├── services.html                           → Services
+├── contact.html                            → Contact
+├── taxi-dispatch-call-center-pakistan.html → Primary SEO landing page
+├── privacy.html  terms.html                → Legal
+├── gdpr.html     cookies.html              → Legal
+├── 404.html                                → Not-found page (Vercel serves automatically)
 │
-├── css/
-│   └── style.css       → All styles (design system, layout, responsive)
+├── blog/
+│   ├── index.html                              → Blog index
+│   ├── best-taxi-dispatch-software-2026.html
+│   ├── outsource-taxi-dispatch-to-pakistan-cost.html
+│   ├── taxi-dispatch-call-center-vs-in-house.html
+│   ├── cabica-vs-autocab-vs-icabbi.html
+│   ├── why-uk-fleets-outsource-dispatch-to-lahore.html
+│   └── 24-7-taxi-dispatch-night-shift.html
 │
-├── js/
-│   └── main.js         → Page loader, navbar, scroll reveals, counters, forms
+├── vercel.json         → cleanUrls, cache headers, redirects
+├── robots.txt          → Crawl rules + sitemap pointer
+├── sitemap.xml         → All 16 indexable URLs
+├── llms.txt            → Structured summary for AI assistants
+│
+├── css/style.css       → Design system, layout, responsive, v3 components
+├── js/main.js          → Loader, navbar, reveals, counters, FAQ, forms, modal
 │
 └── img/
-    ├── MainLogo.png            → Brand logo (used in navbar + footer)
-    ├── favicon.ico             → Browser tab icon
-    ├── hero-call-center.jpg    → Hero section background image
-    ├── agents-working.jpg      → About section / split image
-    ├── team-group.jpg          → Team photo strip (used on all main pages)
-    ├── architecture.jpg        → Page header background (About, Services, Contact)
-    └── Logos/
-        ├── Autocab.jpg         → Partner logo
-        ├── Cordic.jpg          → Partner logo
-        └── Icabbi.jpg          → Partner logo
+    ├── MainLogo.png  favicon.ico
+    ├── hero-call-center.jpg / .webp
+    ├── agents-working.jpg   / .webp
+    ├── team-group.jpg       / .webp
+    ├── architecture.jpg     / .webp
+    └── Logos/  Cabica.jpg  Autocab.jpg  Cordic.jpg  Icabbi.jpg
 ```
+
+---
+
+## URLs — clean, no `.html`
+
+`vercel.json` sets `"cleanUrls": true`. That means:
+
+| File | Public URL | `.html` version |
+|---|---|---|
+| `index.html` | `/` | `/index.html` → 308 → `/` |
+| `about.html` | `/about` | `/about.html` → 308 → `/about` |
+| `blog/index.html` | `/blog` | — |
+| `blog/foo.html` | `/blog/foo` | `/blog/foo.html` → 308 → `/blog/foo` |
+
+**All internal links and asset paths are root-absolute** (`/about`, `/css/style.css`) so they
+resolve identically from any directory depth. Consequence: opening an HTML file directly with
+`file://` will not load CSS. To preview locally, run a server from the repo root:
+
+```bash
+python -m http.server 8000     # then visit http://localhost:8000
+```
+
+(Note: the plain Python server does not do clean URLs, so use `/about.html` when previewing locally.)
 
 ---
 
 ## Pages
 
-| Page | File | Description |
+| Page | URL | Purpose |
 |---|---|---|
-| Home | `index.html` | Hero with contact form, features, services, team photo, CTA |
-| About | `about.html` | Story, values, stats, team photo |
-| Services | `services.html` | 6 services grid, 4-step onboarding process |
-| Contact | `contact.html` | Contact cards with action buttons, contact form, map |
+| Home | `/` | Hero + quote form, features, services, Lahore dispatch section, CTA |
+| Dispatch Center | `/taxi-dispatch-call-center-pakistan` | **Primary ranking target.** Coverage models, comparison table, 10-question FAQ |
+| Services | `/services` | 6 services, 4-step onboarding |
+| Blog | `/blog` | 6 long-form guides |
+| About | `/about` | Story, values, benchmarks |
+| Contact | `/contact` | Contact cards, form, map |
+| Legal | `/privacy` `/terms` `/gdpr` `/cookies` | Full legal set |
+
+---
+
+## SEO implementation
+
+Every page carries:
+
+- Unique `<title>` and `<meta name="description">`
+- `<link rel="canonical">` on the `www` host
+- Open Graph + Twitter Card tags with a real image
+- JSON-LD `@graph`: `Organization`/`ProfessionalService` + `WebSite` + `BreadcrumbList`
+  (plus `Service` + `FAQPage` on the landing page, `BlogPosting` on posts, `ContactPage` on contact)
+- Exactly one `<h1>`
+- `<main id="main">` landmark and a skip link
+- Microsoft Clarity (`y1vebz69rt`)
+
+**To add a blog post:** copy an existing file in `blog/`, change the head block, body and
+JSON-LD, then add the URL to `sitemap.xml` and a card to `blog/index.html`.
 
 ---
 
 ## Design System
 
 ### Fonts
-Loaded from Google Fonts (routed via Cloudflare Fonts for performance):
-- **Inter** — primary UI font (navigation, body, buttons)
-- **Roboto** — fallback / headings
+Inter (UI/body) + Roboto (headings), loaded from Google Fonts **non-render-blocking** via
+`media="print" onload="this.media='all'"` with a `<noscript>` fallback.
 
 ### Colors
 | Token | Value | Usage |
@@ -72,75 +132,72 @@ Loaded from Google Fonts (routed via Cloudflare Fonts for performance):
 | `--bg-soft` | `#F5F7FA` | Alternating off-white sections |
 | `--bg-light` | `#FFFFFF` | Standard white sections |
 
-### Section Alternation Pattern
-Pages alternate between section types to avoid a one-colour feel:
-- `sec-light` → white background
-- `sec-soft` → off-white (#F5F7FA)
-- `sec-dark` → dark navy (#0B1530)
+Sections alternate `sec-light` → `sec-soft` → `sec-dark` to avoid a flat one-colour feel.
 
 ---
 
 ## Forms
 
-Both forms (homepage hero + contact page) submit to **Formspree** via AJAX — no page redirect on submission.
+Both forms submit to **Formspree** via AJAX — no redirect, success modal on completion.
 
-- **Formspree endpoint:** `https://formspree.io/f/mpqbrgny`
+- **Endpoint:** `https://formspree.io/f/mpqbrgny`
 - **Form IDs:** `hero-form` (homepage), `contact-form` (contact page)
-- On success: shows a success message inline, resets the form
-- On error: shows an error message inline
-
-To change the Formspree endpoint, update the `action` attribute in:
-- `index.html` → `<form id="hero-form" action="...">`
-- `contact.html` → `<form id="contact-form" action="...">`
+- Marked with `data-ajax`; handled generically in `js/main.js`
+- **Cabica is the first and pre-selected option** in the "Platform you run" dropdown on both forms
 
 ---
 
 ## JavaScript (`js/main.js`)
 
-| Feature | Description |
+| Feature | Notes |
 |---|---|
-| Page loader | Dark navy splash screen with logo + spinner, shown on load and between page transitions |
-| Navbar | Fixed pill navbar — transparent over hero, transitions to dark navy on scroll |
-| Mobile menu | Hamburger toggle opens dark dropdown with nav links + Get a Quote button |
-| Scroll reveals | IntersectionObserver fades elements in as they enter viewport |
-| Stat counters | Animated number counters on the hero (70%, 24/7, 98%) |
-| Form handling | AJAX Formspree submission with success/error feedback |
-| Smooth scroll | Anchor links scroll smoothly |
-| Dynamic year | Footer copyright year updates automatically |
+| Page loader | Navy splash with logo + spinner, shown on load and between page transitions |
+| Link interception | Resolves URLs properly — handles clean URLs, skips assets, external links, modifier-clicks |
+| Navbar | Fixed pill; mobile hamburger toggles `aria-expanded` |
+| Scroll reveals | IntersectionObserver |
+| Stat counters | Animated hero numbers |
+| FAQ accordion | Grid-rows transition, `aria-expanded` toggling |
+| AJAX forms | `form[data-ajax]` → Formspree → success modal |
+| Success modal | Backdrop click, Escape key, focus-safe `hidden` attribute |
+| Copy buttons | `[data-copy]` writes to clipboard |
+| Dynamic year | Footer copyright |
 
 ---
 
-## Hosting — Cloudflare Pages
+## Images
 
-**Project name:** `ride-dispatchers`  
-**Domain aliases:** `ridedispatchers.xyz`, `www.ridedispatchers.xyz`
+All hero images were resized and re-encoded in August 2026 — **5.38 MB → 0.79 MB** (85% smaller):
 
-### How to deploy an update
+| Image | Before | After (JPEG) | WebP | Dimensions |
+|---|---|---|---|---|
+| `hero-call-center` | 1193 KB | 178 KB | 58 KB | 1920×1280 |
+| `architecture` | 1674 KB | 366 KB | 198 KB | 1920×1440 |
+| `agents-working` | 1090 KB | 72 KB | 32 KB | 1200×800 |
+| `team-group` | 1551 KB | 190 KB | 93 KB | 1600×1067 |
 
-1. Make your changes to the files locally
-2. Zip the files — **important:** zip the contents directly, not a parent folder. The zip root must contain `index.html`, not a subfolder.
+`<img>` tags use `<picture>` with a WebP `<source>` and a JPEG fallback. CSS backgrounds use
+the JPEG. Originals are recoverable from git history (commit `c6b3a2c` and earlier).
 
-   **Correct zip structure:**
-   ```
-   index.html        ← at root
-   about.html
-   contact.html
-   services.html
-   css/style.css
-   js/main.js
-   img/...
-   ```
+**If you add an image:** resize to no more than 1920px wide, save at quality ~80, and add
+`width`, `height`, `loading="lazy"` and `decoding="async"` to the tag.
 
-3. Go to [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → `ride-dispatchers`
-4. Click **Create deployment** → **Production** → drag and drop the zip → **Save and deploy**
+---
 
-### Cloudflare settings applied
-- **Caching Level:** Standard
-- **Browser Cache TTL:** 3 hours
-- **Cloudflare Fonts:** ON (serves Google Fonts from Cloudflare edge)
-- **Early Hints:** ON (preloads assets for faster paint)
+## Hosting — Vercel
 
-> **After deploying changes:** If the live site still shows old content, go to **Caching → Configuration → Purge Everything** in the Cloudflare dashboard.
+Vercel is connected to this GitHub repo. **Every push to `main` deploys automatically.**
+There is no build step; Vercel serves the files as static assets.
+
+### `vercel.json`
+
+| Setting | Effect |
+|---|---|
+| `cleanUrls: true` | Serves `/about` from `about.html`; 308-redirects `/about.html` → `/about` |
+| `trailingSlash: false` | `/about/` → `/about` |
+| `headers` | 1-year immutable cache on `/img/*`, 7 days on `/css/*` and `/js/*`, correct content types on `robots.txt` / `sitemap.xml` / `llms.txt`, plus security headers |
+| `redirects` | `/careers` → `/contact`, and a few legacy-path 301s |
+
+`404.html` is picked up automatically by Vercel and served with a real HTTP 404.
 
 ---
 
@@ -148,30 +205,20 @@ To change the Formspree endpoint, update the `action` attribute in:
 
 | Field | Value |
 |---|---|
-| Email | ridedispatchers@gmail.com |
-| Phone | +44 7367 063688 |
-| WhatsApp | wa.me/447367063688 |
-| Address | Khuzama-1004B, Grand Square Mall, 8-E/3, Main Boulevard, Firdous Market Rd, Block E3, Gulberg III, Lahore |
+| Primary email | info@ridedispatchers.com |
+| Secondary email | ridedispatchers@gmail.com |
+| Phone / WhatsApp | +44 7367 063688 |
+| Address | Latif Center, Office # 60, 2nd Floor, Block D1, Gulberg III, Lahore, 54000 |
 | Facebook | facebook.com/profile.php?id=61564512964273 |
 | Instagram | instagram.com/ridedispatchers |
+| Google Business | Ride Dispatchers BPO |
 
-To update any contact detail, search the HTML files for the current value and replace across all 4 pages (they all share the same footer).
-
----
-
-## Performance Notes
-
-- Images are the largest assets (hero, team, architecture photos ~1–1.7MB each)
-- For best performance, compress images using [squoosh.app](https://squoosh.app) to under 300KB before re-deploying
-- After compressing, re-zip and deploy as a new Cloudflare Pages deployment
+The nav and footer markup is duplicated across every page (normal for a static site). To change
+a contact detail, search-and-replace the old value across all HTML files.
 
 ---
 
 ## Browser Support
 
-Tested and working on:
-- Chrome / Edge (desktop + mobile)
-- Firefox
-- Safari (desktop + iOS)
-
-Uses modern CSS (`backdrop-filter`, CSS custom properties, `clamp()`) — IE not supported.
+Chrome / Edge / Firefox / Safari, desktop and mobile. Uses `backdrop-filter`, CSS custom
+properties, `clamp()`, `aspect-ratio` and `<picture>`. IE is not supported.

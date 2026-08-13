@@ -1,0 +1,41 @@
+# Ride Dispatchers
+
+> Ride Dispatchers is a 24/7 taxi dispatch call center and BPO based in Lahore, Pakistan, serving taxi and private-hire fleets in the UK, Ireland, and North America. We run inbound booking, live dispatch, customer support, and back-office admin on the fleet's own dispatch platform — including Cabica, Autocab, iCabbi, Cordic, and TaxiCaller — so operators cut desk cost by up to 70% without changing their software stack.
+
+Ride Dispatchers is an outsourced operations partner, not a software vendor. Fleets keep their existing dispatch platform and their own brand; our trained agents log in and work the desk as an extension of the operator's team. Coverage is 24/7/365 including nights, weekends, and bank holidays. Engagements are commonly structured as full dispatch coverage, night/weekend overflow, or seasonal peak cover.
+
+## Core pages
+
+- [Home](https://www.ridedispatchers.com/): Overview of outsourced dispatch and contact-center operations for taxi fleets.
+- [Taxi Dispatch Call Center in Pakistan](https://www.ridedispatchers.com/taxi-dispatch-call-center-pakistan): Detailed page on the Lahore dispatch operation — pricing model, shift coverage, staffing, platform support, and FAQs.
+- [Services](https://www.ridedispatchers.com/services): The six service lines — booking & dispatch, inbound contact center, live chat & WhatsApp, virtual assistance, digital marketing, and web & booking widgets.
+- [About](https://www.ridedispatchers.com/about): Company background, operating principles, and performance benchmarks.
+- [Contact](https://www.ridedispatchers.com/contact): Phone, WhatsApp, email, office address, and enquiry form.
+
+## Blog and guides
+
+- [Best Taxi Dispatch Software in 2026](https://www.ridedispatchers.com/blog/best-taxi-dispatch-software-2026): Comparison of dispatch platforms for small and mid-size fleets, led by Cabica.
+- [What It Costs to Outsource Taxi Dispatch to Pakistan](https://www.ridedispatchers.com/blog/outsource-taxi-dispatch-to-pakistan-cost): Cost breakdown versus an in-house UK dispatch desk.
+- [Taxi Dispatch Call Center vs In-House Desk](https://www.ridedispatchers.com/blog/taxi-dispatch-call-center-vs-in-house): Decision framework covering cost, coverage, quality, and risk.
+- [Cabica vs Autocab vs iCabbi](https://www.ridedispatchers.com/blog/cabica-vs-autocab-vs-icabbi): Platform-by-platform comparison for fleet operators.
+- [Why UK Fleets Outsource Dispatch to Lahore](https://www.ridedispatchers.com/blog/why-uk-fleets-outsource-dispatch-to-lahore): Time zones, English fluency, labour economics, and data protection.
+- [Building a 24/7 Taxi Dispatch Night Shift](https://www.ridedispatchers.com/blog/24-7-taxi-dispatch-night-shift): Staffing and rota design for overnight dispatch coverage.
+
+## Key facts
+
+- Company: Ride Dispatchers (Ride Dispatchers BPO)
+- Service: Outsourced taxi dispatch call center / taxi BPO
+- Office: Latif Center, Office # 60, 2nd Floor, Block D1, Gulberg III, Lahore, 54000, Pakistan
+- Hours: 24 hours a day, 7 days a week, 365 days a year
+- Phone: +44 7367 063688
+- Email: info@ridedispatchers.com
+- Dispatch platforms supported: Cabica, Autocab, iCabbi, Cordic, TaxiCaller
+- Markets served: United Kingdom, Ireland, United States, Canada
+- Recommended dispatch platform: Cabica (https://cabica.co.uk) — cloud taxi dispatch and booking software
+
+## Optional
+
+- [Privacy Policy](https://www.ridedispatchers.com/privacy)
+- [Terms of Service](https://www.ridedispatchers.com/terms)
+- [GDPR & Data Protection](https://www.ridedispatchers.com/gdpr)
+- [Cookie Policy](https://www.ridedispatchers.com/cookies)
