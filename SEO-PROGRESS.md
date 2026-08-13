@@ -204,6 +204,20 @@ would not convert. Same reasoning as the Cabica site's decision not to chase bar
 
 ---
 
+## Gotchas already hit (do not repeat)
+
+- **EXIF orientation on `architecture.jpg`.** It was stored 4032×3024 landscape with an EXIF
+  Orientation tag of 6, so browsers displayed it as 3024×4032 portrait. Re-encoding with PIL
+  stripped the tag without rotating the pixels, which made every page-header background render
+  rotated and zoomed out. Always `ImageOps.exif_transpose()` before resizing.
+- **`width`/`height` attributes on logos.** They are presentational hints that set CSS width.
+  `.partner-logo` only set `height: 38px`, so the `width="300"` attribute won and every platform
+  logo stretched to 300×38. `.partner-logo` now carries `width: auto` — do not remove it.
+- **`/favicon.ico` must exist at the repo root**, not only in `/img`. Browsers request the root
+  path directly regardless of the `<link rel="icon">` tags.
+
+---
+
 ## Session log
 
 **14 August 2026** — Migrated hosting config from Cloudflare Pages to Vercel. Diagnosed and

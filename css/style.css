@@ -438,6 +438,10 @@ body.is-leaving { opacity: 0; transition: opacity .35s ease; }
 }
 .partner-logo {
   height: 38px;
+  /* width:auto is required — the width/height HTML attributes are presentational
+     hints, so without this the attribute width wins and the logo stretches. */
+  width: auto;
+  max-width: none;
   opacity: 0.75;
   transition: all .25s ease;
 }

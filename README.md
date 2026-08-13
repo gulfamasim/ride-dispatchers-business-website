@@ -171,15 +171,30 @@ All hero images were resized and re-encoded in August 2026 — **5.38 MB → 0.7
 | Image | Before | After (JPEG) | WebP | Dimensions |
 |---|---|---|---|---|
 | `hero-call-center` | 1193 KB | 178 KB | 58 KB | 1920×1280 |
-| `architecture` | 1674 KB | 366 KB | 198 KB | 1920×1440 |
+| `architecture` | 1674 KB | 283 KB | 134 KB | 1350×1800 (portrait) |
 | `agents-working` | 1090 KB | 72 KB | 32 KB | 1200×800 |
 | `team-group` | 1551 KB | 190 KB | 93 KB | 1600×1067 |
 
 `<img>` tags use `<picture>` with a WebP `<source>` and a JPEG fallback. CSS backgrounds use
-the JPEG. Originals are recoverable from git history (commit `c6b3a2c` and earlier).
+the JPEG. Originals are recoverable from git history (commit `9b977fc` and earlier).
 
-**If you add an image:** resize to no more than 1920px wide, save at quality ~80, and add
-`width`, `height`, `loading="lazy"` and `decoding="async"` to the tag.
+> ⚠️ **EXIF orientation.** `architecture.jpg` was stored as 4032×3024 landscape with an EXIF
+> Orientation tag of 6, so browsers displayed it rotated, as 3024×4032 portrait. Re-encoding it
+> without applying that rotation made the page-header backgrounds appear rotated and zoomed out.
+> **Always run `ImageOps.exif_transpose(im)` before resizing**, so the rotation is baked into the
+> pixels and the tag is no longer needed.
+
+**If you add an image:** apply `exif_transpose`, resize the longest edge to at most 1920px, save
+at quality ~80, and add `width`, `height`, `loading="lazy"` and `decoding="async"` to the tag.
+
+### Favicons
+
+Generated from `img/MainLogo.png`. `favicon.ico` sits at the **repo root** as well as in `/img`,
+because browsers request `/favicon.ico` directly regardless of the `<link>` tags.
+
+`favicon.ico` (multi-res 16/32/48/64) · `img/favicon-16.png` · `img/favicon-32.png` ·
+`img/favicon-192.png` · `img/favicon-512.png` · `img/apple-touch-icon.png` (180×180, opaque
+white background — iOS renders alpha as black) · `site.webmanifest`
 
 ---
 
