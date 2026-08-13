@@ -1,6 +1,6 @@
 # Ride Dispatchers — Website Documentation
 
-**Live site:** [ridedispatchers.xyz](https://ridedispatchers.xyz)  
+**Live site:** [ridedispatchers.com](https://ridedispatchers.com)  
 **Hosted on:** Cloudflare Pages  
 **Last updated:** May 2026
 
